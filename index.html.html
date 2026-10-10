@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Happy Birthday - Shobha Tai Ahire 🎉</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi&family=Rozha+One&family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --app-height: 100dvh;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Tiro Devanagari Marathi', sans-serif;
+      background: linear-gradient(135deg, #1e050f 0%, #4a0e28 40%, #701137 70%, #2b0416 100%);
+      min-height: var(--app-height);
+      overflow-x: hidden;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .font-marathi {
+      font-family: 'Tiro Devanagari Marathi', serif;
+    }
+
+    .font-display {
+      font-family: 'Rozha One', 'Tiro Devanagari Marathi', serif;
+    }
+
+    /* Glassmorphism container for mobile screen */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 25px 50px -12px rgba(225, 29, 72, 0.4);
+    }
+
+    /* Floating Balloons Background */
+    .balloon {
+      position: absolute;
+      bottom: -100px;
+      opacity: 0.85;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      animation: floatUp 10s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .balloon::after {
+      content: "";
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-110dvh) rotate(20deg);
+        opacity: 0;
+      }
+    }
+
+    /* Floating Hearts Background */
+    .floating-heart {
+      position: fixed;
+      pointer-events: none;
+      color: rgba(244, 63, 94, 0.35);
+      animation: heartFloat 7s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes heartFloat {
+      0% {
+        transform: translateY(105dvh) scale(0.6) rotate(0deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-10dvh) scale(1.2) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Canvas Scratch style */
+    #scratchCanvas {
+      touch-action: none;
+      border-radius: 1.25rem;
+      cursor: pointer;
+    }
+
+    /* Flame Flicker Animation */
+    @keyframes flicker {
+      0%, 100% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+      50% { transform: scale(1.15) rotate(2deg); opacity: 1; filter: drop-shadow(0 0 8px #f59e0b); }
+    }
+    .flame-anim {
+      animation: flicker 0.6s infinite ease-in-out alternate;
+    }
+  </style>
+</head>
+
+<body class="w-full flex flex-col justify-between items-center relative min-h-[100dvh] text-gray-800 px-4 py-3">
+
+  <div id="balloonContainer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+  <div id="heartBgContainer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+  <!-- Header Header Badge -->
+  <header class="w-full max-w-sm flex justify-center items-center z-10 my-1">
+    <div class="flex items-center space-x-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/30 text-white shadow-md">
+      <i class="fa-solid fa-gift text-amber-300 text-sm animate-bounce"></i>
+      <span class="font-extrabold text-xs tracking-wider uppercase">Birthday Surprise</span>
+    </div>
+  </header>
+
+  <main class="w-full max-w-sm my-auto z-10">
+    <div class="glass-card rounded-3xl p-5 sm:p-6 text-center relative overflow-hidden transition-all duration-300">
+
+      <!-- ================= STEP 1: SCRATCH & REVEAL ================= -->
+      <section id="step1" class="step-section">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 mb-2 shadow-inner">
+          <i class="fa-solid fa-hand-pointer text-xl"></i>
+        </div>
+        <h2 class="text-xl font-bold text-gray-900">Scratch to Reveal!</h2>
+        <p class="text-[11px] text-gray-500 mb-3">Scratch the gold coating below using your finger!</p>
+
+        <!-- Touch Scratch Container -->
+        <div class="relative w-full h-52 rounded-2xl overflow-hidden shadow-xl border-2 border-amber-300 bg-gradient-to-br from-rose-600 via-purple-700 to-pink-600 flex flex-col justify-center items-center text-white p-4">
+          
+          <!-- Revealed Layer Underneath (ONLY 'what special today') -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center p-4 bg-gradient-to-br from-rose-600 via-pink-600 to-purple-800 text-white text-center">
+            <h1 class="text-2xl sm:text-3xl font-black text-amber-300 tracking-wide drop-shadow-md capitalize">
+              what special today
+            </h1>
+            <p class="text-[11px] text-pink-100 mt-2">Tap Next to find out! 👇</p>
+          </div>
+
+          <!-- Touch Scratch Canvas Overlay -->
+          <canvas id="scratchCanvas" class="absolute inset-0 w-full h-full z-10"></canvas>
+        </div>
+
+        <!-- Big Next Button -->
+        <button id="step1NextBtn" onclick="goToStep(2)" class="hidden w-full mt-4 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-500 via-rose-500 to-pink-500 hover:from-amber-600 hover:to-pink-600 text-white font-black text-base flex items-center justify-center space-x-2 shadow-xl animate-bounce active:scale-95 transition">
+          <span>NEXT</span>
+          <i class="fa-solid fa-arrow-right text-sm"></i>
+        </button>
+      </section>
+
+      <!-- ================= STEP 2: MARATHI REVEAL SCREEN ================= -->
+      <section id="step2" class="step-section hidden">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 mb-3 shadow-inner">
+          <i class="fa-solid fa-calendar-day text-xl"></i>
+        </div>
+
+        <div class="py-6 px-3 bg-gradient-to-br from-rose-500 to-purple-700 rounded-2xl text-white shadow-lg my-2 border border-rose-300/40">
+          <p class="text-xs uppercase tracking-widest text-amber-300 font-bold mb-2">Today's Special Day</p>
+          <h1 class="text-3xl sm:text-4xl font-black font-marathi leading-relaxed tracking-wide drop-shadow-md">
+            सर्वपित्री अमावस्या
+          </h1>
+        </div>
+
+        <button onclick="goToStep(3)" class="w-full mt-5 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-black text-base flex items-center justify-center space-x-2 shadow-xl active:scale-95 transition">
+          <span>NEXT</span>
+          <i class="fa-solid fa-arrow-right text-sm"></i>
+        </button>
+      </section>
+
+      <!-- ================= STEP 3: QUIZ STAGE ================= -->
+      <section id="step3" class="step-section hidden">
+        <!-- Progress Bar -->
+        <div class="w-full bg-rose-100 h-2.5 rounded-full mb-3 overflow-hidden shadow-inner">
+          <div id="quizProgressBar" class="bg-gradient-to-r from-rose-500 to-pink-500 h-full w-1/3 transition-all duration-300"></div>
+        </div>
+
+        <span id="quizBadge" class="text-[10px] font-black text-rose-600 bg-rose-100 px-3 py-1 rounded-full uppercase tracking-wider">Question 1 of 3</span>
+        
+        <h2 id="quizQuestion" class="text-base font-bold text-gray-900 mt-2 mb-3 leading-snug font-marathi">
+          Your Birth date
+        </h2>
+
+        <div id="quizOptionsContainer" class="space-y-2.5">
+          <!-- Dynamic Quiz Buttons -->
+        </div>
+
+        <p id="quizFeedback" class="mt-3 text-xs font-bold hidden"></p>
+      </section>
+
+      <!-- ================= STEP 4: GRAND FINALE WISH PAGE ================= -->
+      <section id="step4" class="step-section hidden">
+        
+        <div class="bg-gradient-to-r from-amber-400 to-rose-500 text-white text-[10px] font-black uppercase tracking-widest py-1 px-3.5 rounded-full inline-block mb-2 shadow">
+          🎉 SPECIAL BIRTHDAY WISH 🎉
+        </div>
+
+        <!-- Main Big Fonts -->
+        <div class="my-3 space-y-1">
+          <h1 class="text-4xl sm:text-5xl font-black font-display bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm leading-tight tracking-tight">
+            Happy Birthday
+          </h1>
+
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-marathi text-gray-900 tracking-wide">
+            Shobha Tai Ahire
+          </h2>
+        </div>
+
+        <!-- Interactive Audio Control & Cake Cut Buttons -->
+        <div class="grid grid-cols-2 gap-2.5 my-4">
+          <button id="musicToggleBtn" onclick="toggleBirthdayMusic()" class="py-3 px-3 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl text-xs font-bold flex items-center justify-center space-x-1.5 shadow-lg active:scale-95 transition">
+            <i class="fa-solid fa-music"></i>
+            <span id="musicBtnLabel">Play Song</span>
+          </button>
+
+          <button onclick="openCakeModal()" class="py-3 px-3 bg-gradient-to-r from-amber-400 via-rose-500 to-pink-500 text-white rounded-2xl text-xs font-bold flex items-center justify-center space-x-1.5 shadow-lg active:scale-95 transition animate-pulse">
+            <i class="fa-solid fa-cake-candles text-amber-200"></i>
+            <span>Cut Cake 🎂</span>
+          </button>
+        </div>
+
+        <!-- Bottom Page Details -->
+        <div class="pt-4 border-t border-rose-100 mt-4">
+          <p class="text-xs font-bold text-gray-600 font-marathi tracking-wide">
+            Me Shobha vishwanath ahire, Chalisgaon
+          </p>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= CAKE POP-UP MODAL ================= -->
+  <div id="cakeModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center px-4 hidden">
+    <div class="glass-card bg-white rounded-3xl p-6 max-w-xs w-full text-center relative border-2 border-amber-300 shadow-2xl transform transition-all scale-95 opacity-0 duration-300" id="cakeModalCard">
+      
+      <button onclick="closeCakeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-lg w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <span class="text-[10px] font-black text-rose-600 bg-rose-100 px-3 py-1 rounded-full uppercase tracking-widest">
+        Make A Wish! 🎂
+      </span>
+
+      <!-- Cake Animation -->
+      <div class="my-6 relative flex flex-col items-center justify-center">
+        
+        <!-- Candles -->
+        <div class="flex space-x-4 mb-[-4px] z-10">
+          <div class="flex flex-col items-center">
+            <div class="w-2.5 h-3 bg-amber-400 rounded-t-full flame-anim"></div>
+            <div class="w-1.5 h-5 bg-gradient-to-b from-pink-300 to-rose-400 rounded-sm"></div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-2.5 h-3 bg-amber-400 rounded-t-full flame-anim" style="animation-delay: 0.2s"></div>
+            <div class="w-1.5 h-5 bg-gradient-to-b from-amber-300 to-yellow-400 rounded-sm"></div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-2.5 h-3 bg-amber-400 rounded-t-full flame-anim" style="animation-delay: 0.4s"></div>
+            <div class="w-1.5 h-5 bg-gradient-to-b from-pink-300 to-rose-400 rounded-sm"></div>
+          </div>
+        </div>
+
+        <!-- Top Layer -->
+        <div class="w-28 h-10 bg-gradient-to-r from-pink-400 via-rose-300 to-pink-400 rounded-t-2xl border-b-4 border-white flex items-center justify-center shadow-inner">
+          <div class="flex space-x-1">
+            <div class="w-2 h-2 rounded-full bg-white"></div>
+            <div class="w-2 h-2 rounded-full bg-white"></div>
+            <div class="w-2 h-2 rounded-full bg-white"></div>
+          </div>
+        </div>
+
+        <!-- Middle Layer -->
+        <div class="w-36 h-12 bg-gradient-to-r from-amber-200 via-pink-300 to-amber-200 border-b-4 border-rose-200 flex items-center justify-center">
+          <span class="text-[10px] font-extrabold text-rose-700 tracking-wider">🎉 HAPPY BIRTHDAY 🎉</span>
+        </div>
+
+        <!-- Bottom Base Layer -->
+        <div class="w-44 h-12 bg-gradient-to-r from-rose-500 via-purple-600 to-rose-500 rounded-b-2xl shadow-lg border-t-2 border-white/50"></div>
+        
+        <!-- Cake Stand -->
+        <div class="w-48 h-3 bg-gray-300 rounded-full mt-1 shadow-md"></div>
+      </div>
+
+      <h3 class="text-xl font-black text-gray-900 font-marathi">
+        शुभ वाढदिवस! 🎈
+      </h3>
+      <p class="text-xs text-gray-500 mt-1 font-marathi">
+        Shobha Tai Ahire
+      </p>
+
+      <button onclick="blowOutCandles()" class="w-full mt-4 py-3 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-black text-xs rounded-xl shadow-lg active:scale-95 transition">
+        Cut The Cake 🔪🎂
+      </button>
+
+    </div>
+  </div>
+
+  <footer class="w-full max-w-sm text-center text-[10px] text-white/70 z-10 py-1">
+    Made with ❤️ for Shobha Tai Ahire
+  </footer>
+
+  <script>
+    // State management
+    let currentQuizIndex = 0;
+    let isScratched = false;
+    let isMusicPlaying = false;
+    let audioCtx = null;
+    let musicTimer = null;
+
+    // Mobile Viewport Height fix for iOS/Android
+    function setAppHeight() {
+      document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+    }
+    window.addEventListener('resize', setAppHeight);
+    window.addEventListener('orientationchange', setAppHeight);
+    setAppHeight();
+
+    // Custom Questions & Options
+    const quizQuestions = [
+      {
+        question: "Your Birth date",
+        options: ["10 Oct", "15 Nov", "25 Dec", "5 Aug"],
+        correct: 0
+      },
+      {
+        question: "Birth date of डुबराली",
+        options: ["12 October", "22 November", "5 January", "18 August"],
+        correct: 1
+      },
+      {
+        question: "Best healthy Dish",
+        options: ["कारल्याची भाजी", "मटन", "खिचडी", "पालक ची भाजी"],
+        correct: 2
+      }
+    ];
+
+    window.addEventListener('load', () => {
+      initFloatingBalloons();
+      initFloatingHearts();
+      initScratchCanvas();
+      renderQuizQuestion();
+    });
+
+    // 1. Floating Balloons Background
+    function initFloatingBalloons() {
+      const container = document.getElementById('balloonContainer');
+      const colors = ['#f43f5e', '#ec4899', '#a855f7', '#eab308', '#3b82f6'];
+      
+      for (let i = 0; i < 8; i++) {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.style.left = `${Math.random() * 85 + 5}%`;
+        balloon.style.width = `${Math.random() * 20 + 35}px`;
+        balloon.style.height = `${Math.random() * 25 + 45}px`;
+        balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.animationDuration = `${Math.random() * 6 + 7}s`;
+        balloon.style.animationDelay = `${Math.random() * 4}s`;
+        container.appendChild(balloon);
+      }
+    }
+
+    // 2. Floating Background Hearts
+    function initFloatingHearts() {
+      const container = document.getElementById('heartBgContainer');
+      const icons = ['fa-heart', 'fa-sparkles', 'fa-star'];
+      
+      for (let i = 0; i < 12; i++) {
+        const heart = document.createElement('i');
+        heart.className = `fa-solid ${icons[Math.floor(Math.random() * icons.length)]} floating-heart`;
+        heart.style.left = `${Math.random() * 90}%`;
+        heart.style.fontSize = `${Math.random() * 16 + 10}px`;
+        heart.style.animationDuration = `${Math.random() * 5 + 6}s`;
+        heart.style.animationDelay = `${Math.random() * 4}s`;
+        container.appendChild(heart);
+      }
+    }
+
+    // 3. High-DPI Mobile Scratch Canvas
+    function initScratchCanvas() {
+      const canvas = document.getElementById('scratchCanvas');
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      // Metallic Gold Gradient Coating
+      const grad = ctx.createLinearGradient(0, 0, rect.width, rect.height);
+      grad.addColorStop(0, '#fbbf24');
+      grad.addColorStop(0.5, '#fef08a');
+      grad.addColorStop(1, '#d97706');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, rect.width, rect.height);
+
+      // Gold Sparkle Overlay Text
+      ctx.fillStyle = '#78350f';
+      ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🎁 Scratch Here with Finger! 🎁', rect.width / 2, rect.height / 2);
+
+      let isDrawing = false;
+
+      function getPos(e) {
+        const r = canvas.getBoundingClientRect();
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+
+        if (e.touches && e.touches.length > 0) {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        }
+
+        return {
+          x: clientX - r.left,
+          y: clientY - r.top
+        };
+      }
+
+      function scratch(x, y) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 25, 0, Math.PI * 2);
+        ctx.fill();
+
+        checkScratchPercentage(rect.width, rect.height);
+      }
+
+      // Touch & Mouse Listeners
+      canvas.addEventListener('mousedown', (e) => { isDrawing = true; const p = getPos(e); scratch(p.x, p.y); });
+      canvas.addEventListener('mousemove', (e) => { if (isDrawing) { const p = getPos(e); scratch(p.x, p.y); } });
+      window.addEventListener('mouseup', () => isDrawing = false);
+
+      canvas.addEventListener('touchstart', (e) => { isDrawing = true; const p = getPos(e); scratch(p.x, p.y); });
+      canvas.addEventListener('touchmove', (e) => {
+        if (isDrawing) {
+          e.preventDefault();
+          const p = getPos(e);
+          scratch(p.x, p.y);
+        }
+      }, { passive: false });
+      window.addEventListener('touchend', () => isDrawing = false);
+    }
+
+    function checkScratchPercentage() {
+      if (isScratched) return;
+
+      const canvas = document.getElementById('scratchCanvas');
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imageData.data;
+      let clearPixels = 0;
+
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] === 0) clearPixels++;
+      }
+
+      const percent = (clearPixels / (pixels.length / 4)) * 100;
+
+      if (percent > 40) {
+        isScratched = true;
+        document.getElementById('step1NextBtn').classList.remove('hidden');
+        confetti({ particleCount: 35, spread: 60, origin: { y: 0.6 } });
+        playAudioNote(523.25, 0.15);
+      }
+    }
+
+    // 4. Step Controller
+    function goToStep(step) {
+      document.querySelectorAll('.step-section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(`step${step}`).classList.remove('hidden');
+
+      if (step === 4) {
+        triggerGrandFinale();
+      }
+    }
+
+    // 5. Memory Quiz Logic
+    function renderQuizQuestion() {
+      const q = quizQuestions[currentQuizIndex];
+      document.getElementById('quizBadge').innerText = `Question ${currentQuizIndex + 1} of ${quizQuestions.length}`;
+      document.getElementById('quizQuestion').innerText = q.question;
+      document.getElementById('quizProgressBar').style.width = `${((currentQuizIndex + 1) / quizQuestions.length) * 100}%`;
+
+      const container = document.getElementById('quizOptionsContainer');
+      container.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3.5 rounded-2xl border-2 border-rose-100 bg-white/90 hover:bg-rose-50 font-bold text-xs text-gray-800 font-marathi transition active:scale-95 flex items-center justify-between shadow-sm";
+        btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle-check text-rose-300 text-sm"></i>`;
+        btn.onclick = () => handleQuizSelect(btn, idx);
+        container.appendChild(btn);
+      });
+
+      document.getElementById('quizFeedback').classList.add('hidden');
+    }
+
+    function handleQuizSelect(btn, selectedIndex) {
+      const q = quizQuestions[currentQuizIndex];
+      const feedbackEl = document.getElementById('quizFeedback');
+
+      if (selectedIndex === q.correct) {
+        btn.className = "w-full text-left p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 font-black text-xs text-emerald-800 font-marathi transition flex items-center justify-between shadow";
+        btn.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-sm";
+
+        feedbackEl.className = "mt-3 text-xs font-bold text-emerald-600 font-marathi";
+        feedbackEl.innerText = "✨ बरोबर उत्तर! (Correct Answer!)";
+        feedbackEl.classList.remove('hidden');
+
+        playAudioNote(587.33, 0.15);
+
+        setTimeout(() => {
+          currentQuizIndex++;
+          if (currentQuizIndex < quizQuestions.length) {
+            renderQuizQuestion();
+          } else {
+            goToStep(4);
+          }
+        }, 900);
+      } else {
+        btn.className = "w-full text-left p-3.5 rounded-2xl border-2 border-rose-500 bg-rose-50 font-bold text-xs text-rose-800 font-marathi transition flex items-center justify-between shadow";
+        btn.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-600 text-sm";
+
+        feedbackEl.className = "mt-3 text-xs font-bold text-rose-600 font-marathi";
+        feedbackEl.innerText = "❌ पुन्हा प्रयत्न करा! (Try again!)";
+        feedbackEl.classList.remove('hidden');
+
+        playAudioNote(220, 0.2);
+      }
+    }
+
+    // 6. Finale, Cake Modal & Music
+    function triggerGrandFinale() {
+      triggerConfettiBurst();
+      toggleBirthdayMusic(true);
+    }
+
+    function openCakeModal() {
+      const modal = document.getElementById('cakeModal');
+      const card = document.getElementById('cakeModalCard');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        card.classList.remove('scale-95', 'opacity-0');
+        card.classList.add('scale-100', 'opacity-100');
+      }, 10);
+      
+      confetti({ particleCount: 40, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function closeCakeModal() {
+      const modal = document.getElementById('cakeModal');
+      const card = document.getElementById('cakeModalCard');
+      card.classList.remove('scale-100', 'opacity-100');
+      card.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    function blowOutCandles() {
+      confetti({
+        particleCount: 100,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#f43f5e', '#ec4899', '#fbbf24', '#a855f7']
+      });
+
+      playAudioNote(523.25, 0.2);
+      setTimeout(() => playAudioNote(659.25, 0.2), 150);
+      setTimeout(() => playAudioNote(783.99, 0.3), 300);
+
+      setTimeout(() => closeCakeModal(), 1500);
+    }
+
+    function triggerConfettiBurst() {
+      const end = Date.now() + 3000;
+      (function frame() {
+        confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      }());
+    }
+
+    function toggleBirthdayMusic(forcePlay = false) {
+      if (forcePlay) isMusicPlaying = false;
+
+      const btnLabel = document.getElementById('musicBtnLabel');
+
+      if (isMusicPlaying) {
+        isMusicPlaying = false;
+        if (musicTimer) clearInterval(musicTimer);
+        btnLabel.innerText = "Play Song";
+      } else {
+        isMusicPlaying = true;
+        btnLabel.innerText = "Pause Song";
+        playBirthdayMelody();
+      }
+    }
+
+    function playBirthdayMelody() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const notes = [
+        { f: 261.63, d: 0.25 }, { f: 261.63, d: 0.25 }, { f: 293.66, d: 0.5 },
+        { f: 261.63, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 329.63, d: 0.8 },
+        { f: 261.63, d: 0.25 }, { f: 261.63, d: 0.25 }, { f: 293.66, d: 0.5 },
+        { f: 261.63, d: 0.5 }, { f: 392.00, d: 0.5 }, { f: 349.23, d: 0.8 }
+      ];
+
+      let idx = 0;
+
+      function stepMelody() {
+        if (!isMusicPlaying) return;
+        const note = notes[idx];
+        playAudioNote(note.f, note.d);
+        idx = (idx + 1) % notes.length;
+        musicTimer = setTimeout(stepMelody, (note.d + 0.1) * 1000);
+      }
+
+      stepMelody();
+    }
+
+    function playAudioNote(freq, dur) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + dur);
+      } catch (e) {
+        console.log("Audio allowed on touch.");
+      }
+    }
+  </script>
+</body>
+</html>
